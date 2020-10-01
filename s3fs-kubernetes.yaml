@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: s3fs-app
-        image: kubernetesio/s3fs
+        image: ninjatester/sftp
         securityContext:
           privileged: true
         ports:

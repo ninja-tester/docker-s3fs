@@ -6,8 +6,8 @@ build-secrets:
 	s#SFTP_USER#`printf ${SFTP_USER} |base64`#; \
 	s#SFTP_PASSWORD#`printf ${SFTP_PASSWORD} |base64`#; \
 	s#S3_BUCKET#`printf ${S3_BUCKET} |base64`#; \
-	s#SSH_KEY#`cat ${SSH_KEY} |base64`#;" \
-	s3fs-secret.yaml.tmpl > s3fs-secret.yaml
+	s#SSH_KEY#`printf ${SSH_KEY} |base64`#;" \
+	s3fs-secret.yaml.tmpl > s3fs-secret.yaml;
 
 deploy-secrets:
 	kubectl create -f ./s3fs-secret.yaml

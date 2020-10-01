@@ -3,21 +3,21 @@
 adduser --disabled-password --gecos "" $SFTP_USER
 
 echo "$SFTP_USER:$SFTP_PASSWORD" | chpasswd
-mkdir /home/$SFTP_USER/.ssh
-echo $SSH_KEY >> /home/$SFTP_USER/.ssh/authorized_keys
-chown $SFTP_USER /home/$SFTP_USER/.ssh/authorized_keys
-chmod 600 /home/$SFTP_USER/.ssh/authorized_keys
 
-echo $AWS_ACCESSKEY:$AWS_SECRETKEY > /s3credentials
+echo "$AWS_ACCESS_KEY_ID:$AWS_SECRET_ACCESS_KEY" > /s3credentials
 chmod 600 /s3credentials
 
 mkdir -p /mnt/s3
-s3fs $S3_BUCKET:$S3_KEY /mnt/s3 -o passwd_file=/s3credentials -o allow_other -o uid=$(id -u $SFTP_USER)
+s3fs $S3_BUCKET /mnt/s3 -o passwd_file=/s3credentials -o allow_other -o uid=$(id -u $SFTP_USER)
 
 ln -s /mnt/s3 /home/$SFTP_USER
 
+#EXCLUDE
+echo "SFTP_PASSWORD: $SFTP_PASSWORD"
+echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+#EXCLUDE
+
 echo "SFTP user: $SFTP_USER"
-echo "S3 Bucker: $S3_BUCKET"
-echo "S3 Key: $S3_KEY"
+echo "S3 Bucket: $S3_BUCKET"
 echo "Ready to accept connections..."
 exec /usr/sbin/sshd -D
